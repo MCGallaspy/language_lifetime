@@ -34,11 +34,8 @@ def analyze_tree(repo_path):
                             universal_newlines=True)
     out, err = proc.communicate()
     langs = dict()
-    for line in out.split("\n"):
-        try:
-            pct, lang = line.split()
-        except ValueError:
-            continue
+    for line in out.splitlines():
+        pct, lang = line.split()
         langs[lang] = pct
     return langs
 
