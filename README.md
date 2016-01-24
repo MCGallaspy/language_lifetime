@@ -63,3 +63,54 @@ Maybe they oscillate around some fixed value, or perhaps they reach peak popular
 
 Here we constrain ourselves to languages that, as a rule of thumb, have started close to zero popularity sometime in 
 the recent past, then try to predict their popularity over the next year (by regression or curve fitting).
+
+How are you going to do this?
+-----------------------------
+
+List the commits for the master branch of a repo (note the http parameter):
+
+`get https://api.github.com/repos/learningequality/ka-lite/commits?sha=master`
+
+This will yield a list of commits. For each one look at the date it was committed to find one in the desired range:
+
+```json
+"committer": {
+  "name": "benjaoming",
+  "email": "benjaoming@gmail.com",
+  "date": "2015-12-04T15:12:50Z"
+},
+```
+
+If the list of results doesn't go back far enough, you can keep searching by replacing the `sha` value in the 
+url with the earliest listed commit.
+
+When you find the sha you like, download the tree:
+
+`https://github.com/learningequality/ka-lite/archive/1f2ece470f7e9731f77fed84b5c5b5578b18af16.zip`
+
+Unzip it, then analyze it with [linguist](https://github.com/github/linguist).
+
+Alternatively, clone the repo, checkout the desired commit, and then analyze it. This might be preferred if several
+points in time of the same repo should be analyzed:
+
+1. `git clone https://github.com/learningequality/ka-lite.git --branch=master`
+2. `git checkout 1f2ece470f7e9731f77fed84b5c5b5578b18af16`
+
+I should be careful -- even authenticated, the github API is rate limited at 5000 requests/hour.
+
+Thus, I should first establish which repos I'll look at. Then for each repo it will take
+
+* 1 request to list the commits
+* Potentially more requests to find the desired date.
+* And also a lot of requests to clone repos, which could take a lot of bandwidth and disk space... :(
+
+Okay, so how are you *really* going to do it?
+---------------------------------------------
+
+1. I'll need a list of dates at which I'd like data points and a list of repos to analyze.
+2. For each repo and date, I'll perform the analysis above.
+3. For each date, I'll keep a running total of # of bytes for each language.
+4. Finally, I'll be able to report (# of bytes for a language) / (# of bytes total) for that date.
+
+Then I'll be able to view the time series data for each language of interest, and decide how to analyze it further
+from there.
