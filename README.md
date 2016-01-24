@@ -114,3 +114,19 @@ Okay, so how are you *really* going to do it?
 
 Then I'll be able to view the time series data for each language of interest, and decide how to analyze it further
 from there.
+
+The project layout
+------------------
+
+If you're on Windows (like me) a Vagrantfile is provided. First get vagrant and VirtualBox, then run `vagrant up`.
+After it's up and provisioned, run `vagrant ssh` to start a session. Then `cd /vagrant` to get to the host directory
+(this one). Necessary packages should have been provisioned for you.
+
+`github-linguist` is a ruby gem that sadly hates windows devs. It also comes with a CLI. A Gemfile is provided -- 
+run `bundle install`.
+
+I like writing scripts in python, because it's fast for me. So create a virtualenv and run 
+`pip install -r requirements`.
+
+Finally, in `src/utils.py` you'll find functions where all the magic happens. It doesn't *do* much right now -- 
+consider this a statement of intent.
